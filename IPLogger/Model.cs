@@ -5,21 +5,27 @@ namespace IPLogger
 {
     public class Model
     {
-        private Dictionary<string, Command> _commands = new Dictionary<string, Command>()
+        public Dictionary<string, Command> Commands { get; private set; }
+
+        public Model()
         {
-            { "read-log", new ReadLogCommand() }
-        };
+            Commands = new Dictionary<string, Command>()
+            {
+                { "read-log", new ReadLogCommand() },
+                { "help", new HelpCommand(this) }
+            };
+        }
 
         public void ExecuteCommand(string command, string parameters)
         {
             command.ToLower();
 
-            if (!_commands.ContainsKey(command)) {
+            if (!Commands.ContainsKey(command)) {
                 MessageSender.SendMessage($"Команды {command} не существует!", MessageType.Error);
                 return;
             }
 
-            _commands[command].Execute(parameters);
+            Commands[command].Execute(parameters);
         }
     }
 }

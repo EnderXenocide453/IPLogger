@@ -26,6 +26,15 @@
             }
         }
 
+        public override string Description => "Команда чтения журнала доступа\n" +
+            "Параметры:\n" +
+            $"\tfile-log - путь к файлу журнала. По умолчанию {ConfigHandler.GetConfigValue(ConfigName.fileLog)}\n" +
+            $"\tfile-output - путь к файлу вывода отчёта. По умолчанию {ConfigHandler.GetConfigValue(ConfigName.fileLog)}\n" +
+            "\ttime-start - нижняя граница врменного промежутка доступа\n" +
+            "\ttime-end - верхняя граница врменного промежутка доступа\n" +
+            "\taddress-start - нижняя граница ip-адреса\n" +
+            "\taddress-mask - верхняя граница ip-адреса. Может быть задана только после нижней";
+
         private void SetUpperAddress(string address) => _logProcessor.AddressMask = new IPComparable(Utils.ParseAddress(address));
 
         private void SetLowerAddress(string address) => _logProcessor.AddressStart = new IPComparable(Utils.ParseAddress(address));

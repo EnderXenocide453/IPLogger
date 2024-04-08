@@ -12,6 +12,7 @@ namespace IPLogger.Commands
         /// </summary>
         protected abstract Dictionary<string, Action<string>> _parameters { get; }
         protected abstract bool _allowExecution { get; }
+        public abstract string Description { get; }
 
         public void Execute(string paramsString)
         {

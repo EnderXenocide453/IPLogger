@@ -1,0 +1,14 @@
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\bin\Debug\net8.0\IPLogger.exe
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\bin\Debug\net8.0\IPLogger.deps.json
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\bin\Debug\net8.0\IPLogger.runtimeconfig.json
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\bin\Debug\net8.0\IPLogger.dll
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\bin\Debug\net8.0\IPLogger.pdb
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\obj\Debug\net8.0\IPLogger.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\obj\Debug\net8.0\IPLogger.AssemblyInfoInputs.cache
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\obj\Debug\net8.0\IPLogger.AssemblyInfo.cs
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\obj\Debug\net8.0\IPLogger.csproj.CoreCompileInputs.cache
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\obj\Debug\net8.0\IPLogger.dll
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\obj\Debug\net8.0\refint\IPLogger.dll
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\obj\Debug\net8.0\IPLogger.pdb
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\obj\Debug\net8.0\IPLogger.genruntimeconfig.cache
+C:\Users\Lakssterius\source\repos\IPLogger\IPLogger\obj\Debug\net8.0\ref\IPLogger.dll

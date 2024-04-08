@@ -1,67 +1,141 @@
-﻿using System.Collections;
+﻿using System.IO;
 using System.Net;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace IPLogger
 {
     public class LogFileProcessor
     {
-        private string _inputPath, _outputPath;
-        private DateTime _lowerDate = DateTime.MinValue, _upperDate = DateTime.MaxValue;
-        private IPComparable _lowerAddress = new IPComparable(IPAddress.None), 
-                             _upperAddress = new IPComparable(IPAddress.Any);
+        private string _fileLog, _fileOutput;
+        private DateTime _timeStart, _timeEnd;
+        private IPComparable _addressStart, _addressMask;
 
-        public LogFileProcessor(string inputPath, string outputPath)
-        {
-            _inputPath = inputPath;
-            _outputPath = outputPath;
+        private bool _addressStartExists = false;
+
+        public string FileLog 
+        { 
+            get => _fileLog; 
+            set
+            {
+                _fileLog = string.Empty;
+
+                if (value == string.Empty || value == null) {
+                    MessageSender.SendMessage(
+                        "Пустой путь журнала!\n" +
+                        "Операция не будет выполнена!", MessageType.Error);
+
+                    return;
+                }
+
+                if (!File.Exists(value)) {
+                    MessageSender.SendMessage(
+                        $"Файла с именем {value} не существует!\n" +
+                        "Операция не будет выполнена!", MessageType.Error);
+
+                    return;
+                }
+
+                _fileLog = value;
+            } 
+        }
+        public string FileOutput 
+        { 
+            get => _fileOutput; 
+            set
+            {
+                if (value == string.Empty || value == null) {
+                    MessageSender.SendMessage(
+                        "Пустой путь результирующего файла!\n" +
+                        "Операция не будет выполнена!", MessageType.Error);
+
+                    return;
+                }
+
+                _fileOutput = value;
+            } 
+        }
+        public DateTime TimeStart { get => _timeStart; set => _timeStart = value; }
+        public DateTime TimeEnd { get => _timeEnd; set => _timeEnd = value; }
+        public IPComparable AddressStart 
+        { 
+            get => _addressStart;
+            set
+            {
+                _addressStart = value;
+                _addressStartExists = true;
+            }
+        }
+        public IPComparable AddressMask 
+        { 
+            get => _addressMask; 
+            set 
+            {
+                if (!_addressStartExists) {
+                    MessageSender.SendMessage("Верхняя граница адреса может быть задана исключительно после нижней!\n" +
+                        "Параметр будет проигнорирован", 
+                        MessageType.Warning);
+
+                    _addressMask = IPComparable.MaxValue;
+                    return;
+                }
+
+                _addressMask = value;
+            }
         }
 
-        public LogFileProcessor(string inputPath,
-                                string outputPath,
-                                DateTime lowerDate,
-                                DateTime upperDate,
-                                IPComparable lowerAddress,
-                                IPComparable upperAddress) : this(inputPath, outputPath)
+        public LogFileProcessor()
         {
-            _inputPath = inputPath;
-            _outputPath = outputPath;
-            _lowerAddress = lowerAddress;
-            _upperAddress = upperAddress;
-            _lowerDate = lowerDate;
-            _upperDate = upperDate;
+            _fileLog = ConfigHandler.GetConfigValue(ConfigName.fileLog);
+            _fileOutput = ConfigHandler.GetConfigValue(ConfigName.fileOutput);
+            _timeStart = Utils.ParseDate(ConfigHandler.GetConfigValue(ConfigName.timeStart));
+            _timeEnd = Utils.ParseDate(ConfigHandler.GetConfigValue(ConfigName.timeEnd));
+            _addressStart = new IPComparable(Utils.ParseAddress(ConfigHandler.GetConfigValue(ConfigName.addressStart)));
+            _addressMask = new IPComparable(Utils.ParseAddress(ConfigHandler.GetConfigValue(ConfigName.addressMask)));
+
+            _addressStartExists = false;
         }
 
         public void ProcessLogFile()
         {
-            if (!TryReadLogFile(_inputPath, out var log)) {
-                MessageSender.SendMessage($"Ошибка при чтении файла {_inputPath}!\n" +
+            if (!Utils.TryReadFile(FileLog, out var log)) {
+                MessageSender.SendMessage($"Ошибка при чтении файла {FileLog}!\n" +
                     $"Обработка файла прекращена", 
                     MessageType.Error);
                 
                 return;
             }
-            
+
+            VerifyBounds();
             ParseAndWriteRequests(log);
         }
 
-        private bool TryReadLogFile(string path, out string log)
+        private void VerifyBounds()
         {
-            log = string.Empty;
+            if (_addressStart.CompareTo(_addressMask) > 0) {
+                MessageSender.SendMessage("Верхняя граница адреса должна быть больше нижней.\n" +
+                    "Границы адреса будут проигнорированы",
+                    MessageType.Warning);
 
-            if (!File.Exists(path))
-                return false;
+                _addressStart = IPComparable.MinValue;
+                _addressMask = IPComparable.MaxValue;
+            }
 
-            log = File.ReadAllText(path);
+            if (_timeStart > _timeEnd) {
+                MessageSender.SendMessage("Верхняя граница даты должна быть больше нижней.\n" +
+                    "Границы даты будут проигнорированы",
+                    MessageType.Warning);
 
-            return true;
+                _timeStart = DateTime.MinValue;
+                _timeEnd = DateTime.MaxValue;
+            }
         }
 
         private void ParseAndWriteRequests(string log)
         {
             List<string> lines = new List<string>(log.Split('\n'));
             
-            ClearLines(lines);
+            Utils.ClearLines(lines);
 
             Dictionary<string, int> requests = new Dictionary<string, int>();
             int count = 0;
@@ -85,20 +159,8 @@ namespace IPLogger
             WriteLog(requests);
         }
 
-        private void ClearLines(List<string> lines)
-        {
-            for (int i = lines.Count - 1; i >= 0; i--) {
-                lines[i] = lines[i].Trim();
-                
-                if (lines[i] == string.Empty)
-                    lines.RemoveAt(i);
-            }
-        }
-
         private bool TryParseLine(string line, out IPAddress address, out DateTime date)
         {
-            //Обработка случая с параметрами
-
             var pair = line.Split(':', 2);
             address = IPAddress.None;
             date = DateTime.MinValue;
@@ -123,10 +185,10 @@ namespace IPLogger
         {
             IPComparable comparableAddress = new IPComparable(address);
 
-            return comparableAddress.CompareTo(_lowerAddress) >= 0
-                && comparableAddress.CompareTo(_upperAddress) <= 0
-                && date >= _lowerDate
-                && date <= _upperDate;
+            return comparableAddress.CompareTo(AddressStart) >= 0
+                && comparableAddress.CompareTo(AddressMask) <= 0
+                && date >= TimeStart
+                && date <= TimeEnd;
         }
 
         private void WriteLog(Dictionary<string, int> requests)
@@ -135,7 +197,7 @@ namespace IPLogger
             string log = JsonSerializer.Serialize(requests, options);
 
             try {
-                File.WriteAllText(_outputPath, log);
+                File.WriteAllText(FileOutput, log);
                 MessageSender.SendMessage("Файл успешно записан!");
             }
             catch (Exception) {

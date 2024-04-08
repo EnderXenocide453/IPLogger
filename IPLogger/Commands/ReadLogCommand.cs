@@ -4,12 +4,7 @@ namespace IPLogger.Commands
 {
     internal class ReadLogCommand : Command
     {
-        private string _inputPath;
-        private string _outputPath;
-        private DateTime _lowerDate;
-        private DateTime _upperDate;
-        private IPComparable _lowerAddress = IPComparable.MinValue;
-        private IPComparable _upperAddress = IPComparable.MaxValue;
+        private LogFileProcessor _logProcessor;
 
         protected override Dictionary<string, Action<string>> _parameters
             => new Dictionary<string, Action<string>>()
@@ -26,133 +21,30 @@ namespace IPLogger.Commands
         {
             get
             {
-                return (_inputPath?.Length > 0 && _outputPath?.Length > 0);
+                return (_logProcessor.FileLog?.Length > 0 && _logProcessor.FileOutput?.Length > 0);
             }
         }
 
-        private void SetUpperAddress(string address)
-        {
-            if (_lowerAddress.Address == IPAddress.None) {
-                MessageSender.SendMessage("Верхняя граница адреса может быть задана исключительно после нижней!\n" +
-                    "Параметр будет проигнорирован", 
-                    MessageType.Warning);
+        private void SetUpperAddress(string address) => _logProcessor.AddressMask = new IPComparable(Utils.ParseAddress(address));
 
-                return;
-            }
+        private void SetLowerAddress(string address) => _logProcessor.AddressStart = new IPComparable(Utils.ParseAddress(address));
 
-            _upperAddress.Address = ParseAddress(address);
-        }
+        private void SetUpperDate(string date) => _logProcessor.TimeEnd = Utils.ParseDate(date);
 
-        private void SetLowerAddress(string address) => _lowerAddress.Address = ParseAddress(address);
+        private void SetLowerDate(string date) => _logProcessor.TimeStart = Utils.ParseDate(date);
 
-        private IPAddress ParseAddress(string addressString)
-        {
-            addressString = addressString.Replace(" ", string.Empty);
+        private void SetOutputFilePath(string path) => _logProcessor.FileOutput = path;
 
-            if (!IPAddress.TryParse(addressString, out var address)) {
-                MessageSender.SendMessage(
-                    $"{addressString} является неправильной формой записи IPv4 адреса!",
-                    MessageType.Error);
-                address = IPAddress.None;
-            }
-
-            return address;
-        }
-
-        private void SetUpperDate(string date) =>  _upperDate = ParseDate(date);
-
-        private void SetLowerDate(string date) => _lowerDate = ParseDate(date);
-
-        private DateTime ParseDate(string dateString)
-        {
-            if (!DateTime.TryParse(dateString, out var date)) {
-                MessageSender.SendMessage(
-                    $"{dateString} не может быть преобразован в дату. " +
-                    $"Используйте форму записи 'dd.MM.yyyy'.\n" +
-                    $"Эта дата будет проигнорирована",
-                    MessageType.Warning);
-
-                date = DateTime.MaxValue;
-            }
-
-            return date;
-        }
-
-        private void SetOutputFilePath(string path)
-        {
-            if (path == string.Empty || path == null) {
-                MessageSender.SendMessage(
-                    "Не задан путь результирующего файла!\n" +
-                    "Операция не будет выполнена!", MessageType.Error);
-
-                return;
-            }
-
-            _outputPath = path;
-        }
-
-        private void SetInputFilePath(string path)
-        {
-            if (path == string.Empty || path == null) {
-                MessageSender.SendMessage(
-                    "Не задан путь файла логов!\n" +
-                    "Операция не будет выполнена!", MessageType.Error);
-
-                return;
-            }
-
-            if (!File.Exists(path)) {
-                MessageSender.SendMessage(
-                    $"Файла с именем {path} не существует!\n" +
-                    "Операция не будет выполнена!", MessageType.Error);
-
-                return;
-            }
-
-            _inputPath = path;
-        }
-
-        private void VerifyBounds()
-        {
-            if (_lowerAddress.CompareTo(_upperAddress) > 0) {
-                MessageSender.SendMessage("Верхняя граница адреса должна быть больше нижней.\n" +
-                    "Границы адреса будут проигнорированы",
-                    MessageType.Warning);
-
-                _lowerAddress = IPComparable.MinValue;
-                _upperAddress = IPComparable.MaxValue;
-            }
-
-            if (_lowerDate > _upperDate) {
-                MessageSender.SendMessage("Верхняя граница даты должна быть больше нижней.\n" +
-                    "Границы даты будут проигнорированы",
-                    MessageType.Warning);
-
-                _lowerDate = DateTime.MinValue;
-                _upperDate = DateTime.MaxValue;
-            }
-        }
+        private void SetInputFilePath(string path) => _logProcessor.FileLog = path;
 
         protected override void OnExecute()
         {
-            VerifyBounds();
-
-            LogFileProcessor logProcessor = new LogFileProcessor(
-                _inputPath, _outputPath, 
-                _lowerDate, _upperDate, 
-                _lowerAddress, _upperAddress);
-
-            logProcessor.ProcessLogFile();
+            _logProcessor.ProcessLogFile();
         }
 
         protected override void PreExecute()
         {
-            SetInputFilePath(ConfigHandler.GetConfigValue(ConfigName.fileLog));
-            SetOutputFilePath(ConfigHandler.GetConfigValue(ConfigName.fileOutput));
-            SetLowerDate(ConfigHandler.GetConfigValue(ConfigName.timeStart));
-            SetUpperDate(ConfigHandler.GetConfigValue(ConfigName.timeEnd));
-            SetLowerAddress(ConfigHandler.GetConfigValue(ConfigName.addressStart));
-            SetUpperAddress(ConfigHandler.GetConfigValue(ConfigName.addressMask));
+            _logProcessor = new LogFileProcessor();
         }
     }
 }

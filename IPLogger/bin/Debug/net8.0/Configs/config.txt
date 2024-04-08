@@ -1,0 +1,8 @@
+{
+  "fileLog": ".\\Resources\\log.txt",
+  "fileOutput": ".\\Resources\\output.txt",
+  "timeStart": "01.01.0001 0:00:00",
+  "timeEnd": "31.12.9999 23:59:59",
+  "addressStart": "0.0.0.0",
+  "addressMask": "128.255.255.255"
+}

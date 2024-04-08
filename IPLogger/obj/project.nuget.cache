@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HAk0+8kHCExthrS9T1t3cF8AO4O1LqbDxUdjIY9mc3IgEajF2TOLoXb5pciKsd02YDV43P0rDuN4BNw151xrJg==",
+  "dgSpecHash": "uzaGj0Y0eRcv457AW3O5lVfVrIHCnJWoUUrcp8siEipx7WWNwMhKqTodue72lL805sOMnFeAJK7jdtjoQB1Z2Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lakssterius\\source\\repos\\IPLogger\\IPLogger\\IPLogger.csproj",
+  "projectFilePath": "C:\\Development\\Git\\IPLogger\\IPLogger\\IPLogger.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lakssterius\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\Lakssterius\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",

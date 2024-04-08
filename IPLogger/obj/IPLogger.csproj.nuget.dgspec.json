@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lakssterius\\source\\repos\\IPLogger\\IPLogger\\IPLogger.csproj": {}
+    "C:\\Development\\Git\\IPLogger\\IPLogger\\IPLogger.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lakssterius\\source\\repos\\IPLogger\\IPLogger\\IPLogger.csproj": {
+    "C:\\Development\\Git\\IPLogger\\IPLogger\\IPLogger.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lakssterius\\source\\repos\\IPLogger\\IPLogger\\IPLogger.csproj",
+        "projectUniqueName": "C:\\Development\\Git\\IPLogger\\IPLogger\\IPLogger.csproj",
         "projectName": "IPLogger",
-        "projectPath": "C:\\Users\\Lakssterius\\source\\repos\\IPLogger\\IPLogger\\IPLogger.csproj",
+        "projectPath": "C:\\Development\\Git\\IPLogger\\IPLogger\\IPLogger.csproj",
         "packagesPath": "C:\\Users\\Lakssterius\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lakssterius\\source\\repos\\IPLogger\\IPLogger\\obj\\",
+        "outputPath": "C:\\Development\\Git\\IPLogger\\IPLogger\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

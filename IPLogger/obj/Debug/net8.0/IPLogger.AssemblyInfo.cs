@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IPLogger")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9852f4b43d4c45d6a4b11d658a74068e7c9f0257")]
 [assembly: System.Reflection.AssemblyProductAttribute("IPLogger")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IPLogger")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

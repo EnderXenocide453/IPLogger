@@ -6,6 +6,8 @@
 
         public static void Main(string[] args)
         {
+            ConfigHandler.ReadConfig();
+            
             View view = new View();
             Model model = new Model();
             _presenter = new Presenter(model, view);

@@ -147,12 +147,12 @@ namespace IPLogger.Commands
 
         protected override void PreExecute()
         {
-            _inputPath = string.Empty;
-            _outputPath = string.Empty;
-            _lowerDate = DateTime.MinValue;
-            _upperDate = DateTime.MaxValue;
-            _lowerAddress = IPComparable.MinValue;
-            _upperAddress = IPComparable.MaxValue;
+            SetInputFilePath(ConfigHandler.GetConfigValue(ConfigName.fileLog));
+            SetOutputFilePath(ConfigHandler.GetConfigValue(ConfigName.fileOutput));
+            SetLowerDate(ConfigHandler.GetConfigValue(ConfigName.timeStart));
+            SetUpperDate(ConfigHandler.GetConfigValue(ConfigName.timeEnd));
+            SetLowerAddress(ConfigHandler.GetConfigValue(ConfigName.addressStart));
+            SetUpperAddress(ConfigHandler.GetConfigValue(ConfigName.addressMask));
         }
     }
 }

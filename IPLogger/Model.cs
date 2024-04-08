@@ -1,4 +1,5 @@
 ﻿using IPLogger.Commands;
+using IPLogger.Messages;
 
 namespace IPLogger
 {
@@ -20,11 +21,5 @@ namespace IPLogger
 
             _commands[command].Execute(parameters);
         }
-
-        //Принять команду
-        //Открыть файл
-        //Прочитать файл
-        //Записать подходящие и верифицированные IP в словарь
-        //Записать словарь в файл
     }
 }

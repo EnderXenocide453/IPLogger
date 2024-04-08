@@ -3,6 +3,9 @@ using System.Text.Json;
 
 namespace IPLogger
 {
+    /// <summary>
+    /// Обработчик настроек
+    /// </summary>
     public static class ConfigHandler
     {
         private const string _configPath = ".\\Configs\\config.txt";

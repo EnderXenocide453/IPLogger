@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 
 namespace IPLogger
 {
-    public class IPComparable : IComparable<IPComparable>, IEquatable<IPAddress>
+    /// <summary>
+    /// Вспомогательный класс для сравнения адресов
+    /// </summary>
+    public class IPComparable : IComparable<IPComparable>
     {
         private IPAddress _address;
 
@@ -39,11 +39,6 @@ namespace IPLogger
             }
 
             return 0;
-        }
-
-        public bool Equals(IPAddress? other)
-        {
-            return _address == other;
         }
     }
 }

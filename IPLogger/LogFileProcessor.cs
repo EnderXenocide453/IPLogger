@@ -1,10 +1,12 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using IPLogger.Messages;
 
 namespace IPLogger
 {
+    /// <summary>
+    /// Обработчик журналов доступа
+    /// </summary>
     public class LogFileProcessor
     {
         private string _fileLog, _fileOutput;
@@ -96,6 +98,9 @@ namespace IPLogger
             _addressStartExists = false;
         }
 
+        /// <summary>
+        /// Начать обработку журнала
+        /// </summary>
         public void ProcessLogFile()
         {
             if (!Utils.TryReadFile(FileLog, out var log)) {
@@ -131,6 +136,10 @@ namespace IPLogger
             }
         }
 
+        /// <summary>
+        /// Пропарсить журнал на наличие корректных записей и составить отчёт
+        /// </summary>
+        /// <param name="log">Текстовое представление журнала</param>
         private void ParseAndWriteRequests(string log)
         {
             List<string> lines = new List<string>(log.Split('\n'));
@@ -141,6 +150,7 @@ namespace IPLogger
             int count = 0;
 
             foreach (string line in lines) {
+                //Если запись корректна и входит в заданные диапазоны
                 if (TryParseLine(line, out var address, out var date) && CheckBounds(address, date)) {
                     string ip = address.ToString();
                     count++;
@@ -191,6 +201,10 @@ namespace IPLogger
                 && date <= TimeEnd;
         }
 
+        /// <summary>
+        /// Сделать запись отчёта в файл
+        /// </summary>
+        /// <param name="requests"></param>
         private void WriteLog(Dictionary<string, int> requests)
         {
             var options = new JsonSerializerOptions() { WriteIndented = true };

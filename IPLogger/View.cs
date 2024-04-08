@@ -1,5 +1,8 @@
 ﻿namespace IPLogger
 {
+    /// <summary>
+    /// Класс взаимодействия с пользователем
+    /// </summary>
     public class View
     {
         public string GetInput()

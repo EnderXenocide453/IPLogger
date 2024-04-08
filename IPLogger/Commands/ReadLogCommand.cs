@@ -1,8 +1,9 @@
-﻿using System.Net;
-
-namespace IPLogger.Commands
+﻿namespace IPLogger.Commands
 {
-    internal class ReadLogCommand : Command
+    /// <summary>
+    /// Команда считывания журнала доступа
+    /// </summary>
+    public class ReadLogCommand : Command
     {
         private LogFileProcessor _logProcessor;
 

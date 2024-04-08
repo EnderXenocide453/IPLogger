@@ -1,10 +1,15 @@
-﻿namespace IPLogger.Commands
+﻿using IPLogger.Messages;
+
+namespace IPLogger.Commands
 {
     public abstract class Command
     {
         private const string ParamsSplitter = "--";
         private Parameter[] _parametersQueue = Array.Empty<Parameter>();
 
+        /// <summary>
+        /// Параметры и ссылки на выполняемые ими методы
+        /// </summary>
         protected abstract Dictionary<string, Action<string>> _parameters { get; }
         protected abstract bool _allowExecution { get; }
 
@@ -65,7 +70,13 @@
             _parametersQueue = tmp.ToArray();
         }
 
+        /// <summary>
+        /// Выполняется перед считыванием параметров и выполнением
+        /// </summary>
         protected abstract void PreExecute();
+        /// <summary>
+        /// Выполнить команду. Вызывается после обработки параметров
+        /// </summary>
         protected abstract void OnExecute();
 
         private struct Parameter : IEquatable<Parameter>

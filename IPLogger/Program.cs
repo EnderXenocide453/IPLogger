@@ -2,23 +2,20 @@
 {
     public static class Program
     {
-        private static Presenter _presenter;
-
         public static void Main(string[] args)
         {
             ConfigHandler.ReadConfig();
             
             View view = new View();
             Model model = new Model();
-            _presenter = new Presenter(model, view);
 
-            LifeCycle();
+            LifeCycle(new Presenter(model, view));
         }
 
-        private static void LifeCycle()
+        private static void LifeCycle(Presenter presenter)
         {
             while (true) {
-                _presenter.WaitForCommand();
+                presenter.WaitForCommand();
             }
         }
     }
